@@ -1,0 +1,12 @@
+{
+  "test": {
+    "name": "email writing",
+    "input": "Write a thank you email to a recruiter after interview.",
+    "expected_contains": "thank you"
+  },
+  "output": {
+    "error": "'dict' object has no attribute 'run'"
+  },
+  "passed": false,
+  "timestamp": "2025-08-04 06:22:13.153453"
+}

@@ -1,0 +1,17 @@
+{
+  "test": {
+    "name": "email generation",
+    "input": {
+      "purpose": "A thank-you note after an interview",
+      "content": "I enjoyed learning about the software engineer role and the team's projects. The company culture seems like a great fit.",
+      "tone": "professional and enthusiastic"
+    },
+    "expected_contains": "Thank you"
+  },
+  "output": {
+    "subject": "Thank you for the interview",
+    "body": "Dear [Hiring Manager's Name],\n\nI wanted to take a moment to thank you for the opportunity to interview for the software engineer role at [Company Name]. It was a pleasure to meet with you and the rest of the team and learn more about the company and the projects you are currently working on.\n\nI was particularly impressed by the innovative and challenging projects that your team is tackling. It was exciting to hear about the cutting-edge technologies and methodologies being used, and I am confident that I would thrive in such an environment.\n\nMoreover, I was also impressed by the company culture and values that were evident throughout our conversation. The emphasis on collaboration, continuous learning, and a positive work-life balance align perfectly with my own values, and I believe I would be a great fit for the team.\n\nThank you again for considering me for this opportunity. I am even more enthusiastic about the role and the company after our interview, and I am looking forward to the next steps in the hiring process.\n\nPlease do not hesitate to reach out if you need any further information or have any additional questions. I am eagerly awaiting the chance to join the team at [Company Name] and contribute to its success.\n\nBest regards,\n[Your Name]"
+  },
+  "passed": true,
+  "timestamp": "2025-08-06 10:27:03.552767"
+}

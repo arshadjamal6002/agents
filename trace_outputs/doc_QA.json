@@ -1,0 +1,12 @@
+{
+  "test": {
+    "name": "doc QA",
+    "input": "What is the refund policy in this document?",
+    "expected_contains": "policy"
+  },
+  "output": {
+    "error": "'dict' object has no attribute 'run'"
+  },
+  "passed": false,
+  "timestamp": "2025-08-04 06:22:24.526649"
+}

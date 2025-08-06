@@ -1,0 +1,24 @@
+{
+  "input": {
+    "steps": [
+      {
+        "agent": "resume_analyzer_agent",
+        "input": {
+          "resume_text": "{{resume}}",
+          "job_description": "We are looking for a top-tier Data Scientist with Python and SQL skills."
+        },
+        "output_key": "resume_feedback"
+      },
+      {
+        "agent": "email_agent",
+        "input": {
+          "purpose": "A compelling cover letter based on resume feedback",
+          "content": "Use the following resume analysis to write the letter: {{resume_feedback}}",
+          "tone": "professional and confident"
+        },
+        "output_key": "cover_letter"
+      }
+    ],
+    "resume": "Arshad Jamal, B.Tech in Computer Science. Skilled in Python, SQL, and Machine Learning. Eager to solve challenging problems."
+  }
+}

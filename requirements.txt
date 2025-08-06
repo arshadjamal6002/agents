@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+openai
+langchain
+python-dotenv
+typer 
+rich
+streamlit
+langchain 
+faiss-cpu 
+openai

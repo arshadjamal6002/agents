@@ -1,0 +1,7 @@
+{
+  "name": "doc_qa_agent",
+  "description": "Answers user questions by reading a PDF document using RAG.",
+  "type": "ToolAgent",
+  "entry_point": "agent.py",
+  "required_inputs": ["pdf_path", "question"]
+}

@@ -1,0 +1,7 @@
+{
+  "name": "slide_generator_agent",
+  "description": "Creates slide outlines from a topic or a list of points. Outputs a structured slide deck with titles and bullet points.",
+  "type": "ToolAgent",
+  "entry_point": "agent.py",
+  "required_inputs": ["topic", "bullets"]
+}

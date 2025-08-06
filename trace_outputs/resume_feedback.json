@@ -1,0 +1,24 @@
+{
+  "test": {
+    "name": "resume feedback",
+    "input": "Review this resume for a software engineer job.",
+    "expected_contains": "feedback"
+  },
+  "output": {
+    "match_score": 90,
+    "summary": {
+      "skills": "Strong programming skills in various languages such as Java, Python, and C++. Experience with web development, database management, and software testing. Familiar with Agile methodology and version control systems.",
+      "experience": "Over 5 years of experience as a software engineer, working on various projects in different industries. Proven track record of delivering high-quality and efficient solutions. Experience in both front-end and back-end development.",
+      "education": "Bachelor's degree in Computer Science from a top university. Continuously learning and staying updated on new technologies and programming languages."
+    },
+    "suggestions": [
+      "Include specific examples of projects and accomplishments to showcase skills and experience.",
+      "Add any relevant certifications or additional training courses.",
+      "Consider adding a section for technical skills or tools used.",
+      "Include any leadership or teamwork experience in projects.",
+      "Tailor the resume to highlight skills and experience that align with the job description."
+    ]
+  },
+  "passed": false,
+  "timestamp": "2025-08-04 06:22:17.440820"
+}

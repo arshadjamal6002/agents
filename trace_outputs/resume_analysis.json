@@ -1,0 +1,28 @@
+{
+  "test": {
+    "name": "resume analysis",
+    "input": {
+      "resume_text": "Jane Doe - Python Developer with 5 years experience in FastAPI and data science.",
+      "job_description": "We are hiring a senior Python engineer. Must have experience with FastAPI."
+    },
+    "expected_contains": "match_score"
+  },
+  "output": {
+    "match_score": 80,
+    "summary": {
+      "skills": [
+        "Python",
+        "FastAPI",
+        "data science"
+      ],
+      "experience": "5 years",
+      "education": "Not specified"
+    },
+    "suggestions": [
+      "Include specific examples of projects or achievements using FastAPI in the experience section.",
+      "Add any relevant education or certifications related to Python or data science."
+    ]
+  },
+  "passed": true,
+  "timestamp": "2025-08-06 10:27:06.685557"
+}

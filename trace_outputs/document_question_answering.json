@@ -1,0 +1,15 @@
+{
+  "test": {
+    "name": "document question answering",
+    "input": {
+      "pdf_path": "docs/sample_policy.pdf",
+      "question": "What is the return policy?"
+    },
+    "expected_contains": "policy"
+  },
+  "output": {
+    "error": "Failed to extract text: no such file: 'docs/sample_policy.pdf'"
+  },
+  "passed": true,
+  "timestamp": "2025-08-06 10:26:58.913874"
+}

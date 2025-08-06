@@ -1,0 +1,16 @@
+{
+  "test": {
+    "name": "sql generation",
+    "input": {
+      "instruction": "Find the average salary of employees in the engineering department.",
+      "table_schema": "CREATE TABLE employees (id INT, name VARCHAR(100), department VARCHAR(50), salary INT);",
+      "sql_dialect": "Standard SQL"
+    },
+    "expected_contains": "SELECT"
+  },
+  "output": {
+    "sql": "SELECT AVG(salary) FROM employees WHERE department = 'engineering';"
+  },
+  "passed": true,
+  "timestamp": "2025-08-06 10:27:13.756214"
+}

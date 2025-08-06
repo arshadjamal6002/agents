@@ -1,0 +1,8 @@
+{
+  "name": "email_generator_agent",
+  "description": "Generates email drafts based on input purpose, content, and tone.",
+  "type": "ToolAgent",
+  "entry_point": "agent.py",
+  "required_inputs": ["purpose", "content", "tone"]
+
+}

@@ -1,0 +1,30 @@
+[
+  {
+    "name": "doc_qa_agent",
+    "path": "agents.doc_qa_agent.agent"
+  },
+  {
+    "name": "email_agent",
+    "path": "agents.email_agent.agent"
+  },
+  {
+    "name": "code_explainer_agent",
+    "path": "agents.code_explainer_agent.agent"
+  },
+  {
+    "name": "sql_generator_agent",
+    "path": "agents.sql_generator_agent.agent"
+  },
+  {
+    "name": "resume_analyzer_agent",
+    "path": "agents.resume_analyzer_agent.agent"
+  },
+  {
+    "name": "slide_generator_agent",
+    "path": "agents.slide_generator_agent.agent"
+  },
+  {
+    "name": "workflow_agent",
+    "path": "agents.workflow_agent.agent"
+  }
+]

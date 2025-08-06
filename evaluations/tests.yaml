@@ -1,0 +1,43 @@
+tests:
+  - name: code explanation
+    input:
+      code: "def add(a, b):\n  return a + b"
+      language: "Python"
+      depth: "beginner"
+    expected_contains: "summary"
+
+  - name: document question answering
+    input:
+      pdf_path: "docs/sample_policy.pdf" # Make sure you create this file for testing
+      question: "What is the return policy?"
+    expected_contains: "policy"
+
+  - name: email generation
+    input:
+      purpose: "A thank-you note after an interview"
+      content: "I enjoyed learning about the software engineer role and the team's projects. The company culture seems like a great fit."
+      tone: "professional and enthusiastic"
+    expected_contains: "Thank you"
+
+  - name: resume analysis
+    input:
+      resume_text: "Jane Doe - Python Developer with 5 years experience in FastAPI and data science."
+      job_description: "We are hiring a senior Python engineer. Must have experience with FastAPI."
+    expected_contains: "match_score"
+
+  - name: slide generation
+    input:
+      topic: "The Future of Artificial Intelligence"
+      bullets:
+        - "Introduction to AI"
+        - "Current Trends (LLMs, Generative Art)"
+        - "Ethical Considerations"
+        - "Future Predictions"
+    expected_contains: "slide"
+
+  - name: sql generation
+    input:
+      instruction: "Find the average salary of employees in the engineering department."
+      table_schema: "CREATE TABLE employees (id INT, name VARCHAR(100), department VARCHAR(50), salary INT);"
+      sql_dialect: "Standard SQL"
+    expected_contains: "SELECT"

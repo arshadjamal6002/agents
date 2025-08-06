@@ -1,0 +1,23 @@
+{
+  "last_input": "write a follow up email to the recruiter u had interview a week ago\n",
+  "last_response": "{\"subject\": \"Follow Up on Interview\", \"body\": \"Dear [Recruiter's Name],\\n\\nI hope this email finds you well. I wanted to follow up on the interview we had last week for the [Position] role at [Company Name]. I am grateful for the opportunity to have met with you and the team and to learn more about the company and the role.\\n\\nI am still very interested in the position and I wanted to express my continued enthusiasm for the opportunity. I believe my skills and experience align well with the requirements of the role and I am confident that I can make a positive contribution to the team.\\n\\nI understand that you may still be in the process of interviewing other candidates and I wanted to assure you that I am still very much interested in the position. If there is any additional information or materials that you need from me, please do not hesitate to let me know.\\n\\nThank you again for considering me for the role. I look forward to hearing back from you and hopefully moving forward in the hiring process.\\n\\nBest regards,\\n[Your Name]\"}",
+  "resume_feedback": {
+    "match_score": 85,
+    "summary": {
+      "skills": "Python, SQL",
+      "experience": "Data Scientist",
+      "education": "Not specified"
+    },
+    "suggestions": [
+      "Include specific examples of projects or experiences using Python and SQL",
+      "Highlight any relevant certifications or courses related to data science",
+      "Consider adding more details about your data science experience, such as specific techniques or tools used",
+      "Include any experience or skills related to data analysis or machine learning",
+      "Consider adding a section for technical skills to showcase your proficiency in Python and SQL"
+    ]
+  },
+  "cover_letter": {
+    "subject": "Generated Email",
+    "body": "Subject: Experienced Marketing Professional Seeking New Opportunities\n\nDear Hiring Manager,\n\nI am writing to express my interest in the Marketing Manager position at your company. After reviewing my resume, I understand that you are looking for a candidate with strong leadership skills, a proven track record of driving successful marketing campaigns, and a passion for innovative strategies. I am confident that I possess all of these qualities and more.\n\nAs highlighted in my resume, I have over 5 years of experience in the marketing industry, with a focus on digital marketing and brand management. I have successfully led multiple cross-functional teams and delivered impactful campaigns that have resulted in increased brand awareness and revenue growth for my previous employers.\n\nOne of my greatest strengths is my ability to think outside the box and come up with creative solutions to complex problems. I am always up for a challenge and thrive in a fast-paced, dynamic environment. I am also well-versed in the latest marketing trends and technologies, and I am constantly looking for ways to stay ahead of the curve.\n\nIn addition to my professional experience, I have a Bachelor's degree in Marketing and I am currently pursuing a Master's degree in Business Administration. I am confident that my education and experience have equipped me with the necessary skills to excel in this role.\n\nI am excited about"
+  }
+}

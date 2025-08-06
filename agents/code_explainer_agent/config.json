@@ -1,0 +1,7 @@
+{
+  "name": "code_explainer_agent",
+  "description": "Explains code snippets in detail. Returns summary, line-by-line explanation, and recommendations.",
+  "type": "ToolAgent",
+  "entry_point": "agent.py",
+  "required_inputs": ["code", "language", "depth"]
+}

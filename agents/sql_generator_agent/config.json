@@ -1,0 +1,11 @@
+{
+  "name": "sql_generator_agent",
+  "description": "Generates SQL from natural language using table schema and SQL dialect.",
+  "type": "ToolAgent",
+  "entry_point": "agent.py",
+  "required_inputs": [
+    "instruction",
+    "table_schema",
+    "sql_dialect"
+  ]
+}

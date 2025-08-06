@@ -1,0 +1,5 @@
+{
+  "name": "workflow_agent",
+  "description": "Chains multiple agents to perform a complex task.",
+  "type": "llm"
+}

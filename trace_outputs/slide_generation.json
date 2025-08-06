@@ -1,0 +1,21 @@
+{
+  "test": {
+    "name": "slide generation",
+    "input": {
+      "topic": "The Future of Artificial Intelligence",
+      "bullets": [
+        "Introduction to AI",
+        "Current Trends (LLMs, Generative Art)",
+        "Ethical Considerations",
+        "Future Predictions"
+      ]
+    },
+    "expected_contains": "slide"
+  },
+  "output": {
+    "error": "LLM returned invalid JSON",
+    "raw_output": "{\n  \"slides\": [\n    {\"title\": \"Introduction to AI\", \"bullets\": [\"Artificial Intelligence (AI) is a branch of computer science that focuses on creating intelligent machines.\", \"AI is used in a variety of industries, including healthcare, finance, and transportation.\", \"The goal of AI is to mimic human cognitive abilities, such as learning, problem-solving, and decision-making.\"]},\n    {\"title\": \"Current Trends\", \"bullets\": [\"Language Models (LLMs) are AI systems that can generate human-like text.\", \"Generative Art is a form of art created by AI algorithms.\", \"LLMs and Generative Art have gained popularity in recent years due to advancements in AI technology.\"]},\n    {\"title\": \"Ethical Considerations\", \"bullets\": [\"AI has the potential to replace human jobs, leading to concerns about unemployment.\", \"Bias in AI algorithms can perpetuate societal inequalities and discrimination.\", \"There are ongoing debates about the ethical implications of giving AI systems decision-making power.\"]},\n    {\"title\": \"Future Predictions\", \"bullets\": [\"Experts predict that AI will continue to advance and become more integrated into our daily lives.\", \"There are concerns about the potential for AI to surpass human intelligence and control.\", \"The"
+  },
+  "passed": true,
+  "timestamp": "2025-08-06 10:27:11.027673"
+}

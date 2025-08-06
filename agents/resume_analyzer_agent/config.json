@@ -1,0 +1,7 @@
+{
+  "name": "resume_analyzer_agent",
+  "description": "Analyzes a resume against a job description. Outputs a match score, extracted summary, and improvement suggestions.",
+  "type": "ToolAgent",
+  "entry_point": "agent.py",
+  "required_inputs": ["resume_text", "job_description"]
+}
