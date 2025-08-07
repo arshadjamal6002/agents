@@ -12,7 +12,7 @@ This README is also available as a full, interactive web application. Explore th
 
 **[➡️ View the Live Interactive README](https://arshadjamal6002.github.io/agents/)**
 
-[![Interactive README Preview](screenshots/webpage.png)](https://arshadjamal6002.github.io/agents/)
+<!-- [![Interactive README Preview](screenshots/webpage.png)](https://arshadjamal6002.github.io/agents/) -->
 
 ## 📜 Table of Contents
 
