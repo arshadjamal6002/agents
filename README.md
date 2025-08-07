@@ -6,6 +6,13 @@ A full-stack, production-ready framework for building, testing, and deploying so
 Welcome to a new paradigm of AI application development. This framework moves beyond single-purpose AI tools to a cohesive ecosystem where specialized agents work in concert, orchestrated by a central intelligence and accessible through a rich suite of interfaces. From backend API to a polished web UI, this project provides every component needed to bring advanced agentic workflows to life.
 
 ---
+## Live Interactive Demo
+
+This README is also available as a full, interactive web application. Explore the system's features, architecture, and usage in a more dynamic way.
+
+**[➡️ View the Live Interactive README](https://arshadjamal6002.github.io/agents/)**
+
+[![Interactive README Preview](screenshots/webpage.png)](https://arshadjamal6002.github.io/agents/)
 
 ## 📜 Table of Contents
 
@@ -51,7 +58,7 @@ This framework is built on three key principles:
 
 > Showcasing the CLI, Web UI, and overall agent workflows.
 
-### 🔹 Web UI
+### 🔹 CURL via FastAPI
 
 ![Fast API](screenshots/FastAPI.png)
 
@@ -59,7 +66,7 @@ This framework is built on three key principles:
 
 ![CLI Screenshot](screenshots/cli.png)
 
-### 🔹 Orchestrator Test Results
+### 🔹 Web UI
 
 ![Streamlit UI](screenshots/ui.png)
 
@@ -69,30 +76,29 @@ This framework is built on three key principles:
 
 The framework is designed with a clear separation of concerns, enabling scalability and maintainability.
 
-```mermaid
 graph TD
-    subgraph User Interfaces
-        A[🌐 Streamlit Web UI]
-        B[💻 Command-Line (CLI)]
-        C[🔌 External Apps]
+    subgraph User_Interfaces
+        A[Streamlit Web UI]
+        B[Command-Line (CLI)]
+        C[External Apps]
     end
 
-    subgraph Core System
-        D[🚀 FastAPI Server]
-        E[🧠 Orchestrator Agent]
-        F[🔄 Workflow Agent]
+    subgraph Core_System
+        D[FastAPI Server]
+        E[Orchestrator Agent]
+        F[Workflow Agent]
     end
 
-    subgraph Specialist Agents
-        G[📄 Doc QA Agent]
-        H[✉️ Email Agent]
-        I[💻 Code Explainer]
-        J[📊 SQL Generator]
-        K[...]
+    subgraph Specialist_Agents
+        G[Doc QA Agent]
+        H[Email Agent]
+        I[Code Explainer]
+        J[SQL Generator]
+        K[Other Agents]
     end
 
-    subgraph Shared State
-        L[🧠 Shared Memory (memory.json)]
+    subgraph Shared_State
+        L[Shared Memory (memory.json)]
     end
 
     A --> D
@@ -100,32 +106,33 @@ graph TD
     C --> D
 
     D --> E
-    D -- Direct Call --> F
-    D -- Direct Call --> G
-    D -- Direct Call --> H
-    D -- Direct Call --> I
-    D -- Direct Call --> J
-    D -- Direct Call --> K
+    D --> F
+    D --> G
+    D --> H
+    D --> I
+    D --> J
+    D --> K
 
-    E -- Routes to --> G
-    E -- Routes to --> H
-    E -- Routes to --> I
-    E -- Routes to --> J
-    E -- Routes to --> K
+    E --> G
+    E --> H
+    E --> I
+    E --> J
+    E --> K
 
-    F -- Executes --> G
-    F -- Executes --> H
-    F -- Executes --> I
-    F -- Executes --> J
-    F -- Executes --> K
+    F --> G
+    F --> H
+    F --> I
+    F --> J
+    F --> K
 
-    F -- Writes to --> L
-    G -- Can Read/Write --> L
-    H -- Can Read/Write --> L
-    I -- Can Read/Write --> L
-    J -- Can Read/Write --> L
-    K -- Can Read/Write --> L
-```
+    F --> L
+    G --> L
+    H --> L
+    I --> L
+    J --> L
+    K --> L
+
+
 
 ---
 
