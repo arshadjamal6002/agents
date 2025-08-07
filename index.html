@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GenAI Multi-Agent Orchestration Framework</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- 
+        Chosen Palette: "Calm Harmony" - A professional and clean theme using Slate gray for a modern, tech-focused feel, with Sky blue as a subtle accent for interactive elements.
+        Application Structure Plan: A single-page dashboard layout with a sticky navigation header for easy access to thematic sections (Overview, Architecture, Agents, Usage). This non-linear structure prioritizes user exploration, allowing developers to jump directly to the content they need. Key information like features and agents are presented as interactive cards, and the complex architecture diagram is rebuilt in HTML/CSS with hover effects to improve clarity and engagement over a static document.
+        Visualization & Content Choices: 
+        - README Intro -> Goal: Inform -> Method: Hero section with title and summary -> Interaction: None -> Justification: Creates a strong first impression.
+        - Features Table -> Goal: Inform -> Method: Grid of interactive cards with icons -> Interaction: Hover for subtle scaling effect -> Justification: More visually appealing and modern than a static table.
+        - Architecture Diagram -> Goal: Organize/Explain -> Method: Recreated flowchart using HTML divs with Tailwind Flexbox/Grid -> Interaction: Hover over nodes to highlight and show tooltips -> Justification: Makes a complex diagram interactive and digestible without using forbidden SVG/Mermaid.
+        - Agent Roster Table -> Goal: Organize/Inform -> Method: A filterable grid of clickable cards -> Interaction: Click to show details (description, inputs) -> Justification: Far superior UX for exploring a list of components compared to a static table.
+        - Usage Code Blocks -> Goal: Inform/Enable -> Method: A tabbed interface for API, CLI, UI examples with copy buttons -> Interaction: Click tabs and copy buttons -> Justification: Organizes dense code snippets cleanly and improves usability.
+        CONFIRMATION: NO SVG graphics used. NO Mermaid JS used.
+    -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* slate-50 */
+        }
+        .tooltip {
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .has-tooltip:hover .tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="text-slate-700">
+
+    <!-- Header & Navigation -->
+    <header class="bg-white/80 backdrop-blur-lg sticky top-0 z-50 border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center">
+                    <span class="text-xl font-bold text-slate-800">🧠 GenAI Framework</span>
+                </div>
+                <nav class="hidden md:flex md:space-x-8">
+                    <a href="#overview" class="text-slate-600 hover:text-sky-600 font-medium">Overview</a>
+                    <a href="#architecture" class="text-slate-600 hover:text-sky-600 font-medium">Architecture</a>
+                    <a href="#agents" class="text-slate-600 hover:text-sky-600 font-medium">Agent Explorer</a>
+                    <a href="#usage" class="text-slate-600 hover:text-sky-600 font-medium">Usage Guide</a>
+                    <a href="#roadmap" class="text-slate-600 hover:text-sky-600 font-medium">Roadmap</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+        <!-- Overview Section -->
+        <section id="overview" class="text-center pt-16 pb-20">
+            <h1 class="text-4xl md:text-5xl font-bold tracking-tight text-slate-900 mb-4">GenAI Multi-Agent Orchestration Framework</h1>
+            <p class="max-w-3xl mx-auto text-lg text-slate-600 mb-12">
+                A full-stack, production-ready framework for building, testing, and deploying sophisticated AI systems where multiple agents collaborate to solve complex problems.
+            </p>
+
+            <h2 class="text-3xl font-bold text-slate-800 mb-10">Features at a Glance</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 text-left">
+                <!-- Feature Cards -->
+                <div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-lg transition-shadow duration-300">
+                    <h3 class="text-lg font-semibold text-slate-900 mb-2">🧩 Modular Agent Architecture</h3>
+                    <p class="text-slate-600">Plug-and-play structure for easily adding new, specialized AI agents.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-lg transition-shadow duration-300">
+                    <h3 class="text-lg font-semibold text-slate-900 mb-2">🧠 LLM-Powered Orchestrator</h3>
+                    <p class="text-slate-600">A central routing agent that understands natural language and delegates tasks.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-lg transition-shadow duration-300">
+                    <h3 class="text-lg font-semibold text-slate-900 mb-2">🔄 Multi-Agent Workflows</h3>
+                    <p class="text-slate-600">Execute complex, multi-step tasks by chaining agents together in sequence.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-lg transition-shadow duration-300">
+                    <h3 class="text-lg font-semibold text-slate-900 mb-2">💾 Persistent Shared Memory</h3>
+                    <p class="text-slate-600">File-backed memory allows agents to share context and state across runs.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-lg transition-shadow duration-300">
+                    <h3 class="text-lg font-semibold text-slate-900 mb-2">🌐 Triple Interface</h3>
+                    <p class="text-slate-600">Interact via a REST API (FastAPI), an interactive CLI (Typer), or a user-friendly Web UI (Streamlit).</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm hover:shadow-lg transition-shadow duration-300">
+                    <h3 class="text-lg font-semibold text-slate-900 mb-2">🧪 YAML-Based Evaluation</h3>
+                    <p class="text-slate-600">A simple but effective testing suite to run predefined test cases and validate outputs.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Architecture Section -->
+        <section id="architecture" class="pt-20 pb-20">
+            <h2 class="text-3xl font-bold text-slate-800 text-center mb-4">Interactive System Architecture</h2>
+            <p class="text-lg text-slate-600 text-center max-w-3xl mx-auto mb-12">
+                The framework is designed with a clear separation of concerns. Hover over any component to learn more about its role in the system.
+            </p>
+            <div class="bg-white p-8 rounded-xl shadow-lg">
+                <div class="flex flex-col md:flex-row justify-around items-center md:items-start space-y-8 md:space-y-0 md:space-x-4">
+                    <!-- Column 1: Interfaces -->
+                    <div class="flex flex-col items-center space-y-4">
+                        <h4 class="font-semibold text-slate-800">User Interfaces</h4>
+                        <div class="arch-node has-tooltip" data-tooltip="The user interacts with the system through the Streamlit Web UI, a Command-Line Interface, or directly via the API.">🌐 Web UI</div>
+                        <div class="arch-node has-tooltip" data-tooltip="A powerful CLI for developers and testers to quickly interact with agents and workflows.">💻 CLI</div>
+                        <div class="arch-node has-tooltip" data-tooltip="External applications can integrate with the system through the REST API.">🔌 External Apps</div>
+                    </div>
+                    
+                    <!-- Arrow -->
+                    <div class="hidden md:flex items-center h-full pt-16">
+                        <span class="text-4xl text-slate-300">→</span>
+                    </div>
+
+                    <!-- Column 2: Core System -->
+                    <div class="flex flex-col items-center space-y-4">
+                        <h4 class="font-semibold text-slate-800">Core System</h4>
+                        <div class="arch-node has-tooltip" data-tooltip="A FastAPI server receives all requests and routes them to the appropriate component.">🚀 API Server</div>
+                        <div class="arch-node has-tooltip" data-tooltip="A central agent that analyzes user input and routes it to the correct specialist agent.">🧠 Orchestrator</div>
+                        <div class="arch-node has-tooltip" data-tooltip="A meta-agent that executes a pre-defined sequence of other agents to perform complex tasks.">🔄 Workflow Agent</div>
+                    </div>
+
+                    <!-- Arrow -->
+                     <div class="hidden md:flex items-center h-full pt-16">
+                        <span class="text-4xl text-slate-300">→</span>
+                    </div>
+
+                    <!-- Column 3: Specialist Agents -->
+                    <div class="flex flex-col items-center space-y-4">
+                        <h4 class="font-semibold text-slate-800">Specialist Agents</h4>
+                        <div class="arch-node has-tooltip" data-tooltip="Generates SQL queries from natural language.">📊 SQL Generator</div>
+                        <div class="arch-node has-tooltip" data-tooltip="Analyzes a resume against a job description.">📄 Resume Analyzer</div>
+                        <div class="arch-node has-tooltip" data-tooltip="Generates professional email drafts.">✉️ Email Agent</div>
+                    </div>
+                </div>
+                <!-- Shared State -->
+                <div class="mt-12 flex flex-col items-center">
+                     <div class="text-2xl text-slate-300 mb-4">↓</div>
+                    <div class="arch-node-large has-tooltip" data-tooltip="A central file-based memory (memory.json) that agents can read from and write to, allowing them to share state and context across tasks.">🧠 Shared Memory</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Agent Explorer Section -->
+        <section id="agents" class="pt-20 pb-20">
+            <h2 class="text-3xl font-bold text-slate-800 text-center mb-4">Agent Explorer</h2>
+            <p class="text-lg text-slate-600 text-center max-w-3xl mx-auto mb-12">
+                Discover the specialist agents available in the framework. Click on any agent to see its description and required inputs. Use the search to filter agents.
+            </p>
+            <div class="max-w-md mx-auto mb-8">
+                 <input type="text" id="agent-search" placeholder="Search agents..." class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition">
+            </div>
+            <div id="agent-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Agent cards will be injected here by JavaScript -->
+            </div>
+            <!-- Agent Detail Display Area -->
+            <div id="agent-detail-view" class="mt-12 bg-white p-8 rounded-xl shadow-lg hidden">
+                <button id="close-detail-view" class="float-right font-bold text-slate-500 hover:text-slate-800">X</button>
+                <h3 id="detail-name" class="text-2xl font-bold text-slate-900 mb-2"></h3>
+                <p id="detail-desc" class="text-slate-600 mb-6"></p>
+                <h4 class="font-semibold text-slate-800 mb-2">Required Inputs:</h4>
+                <div id="detail-inputs" class="flex flex-wrap gap-2"></div>
+            </div>
+        </section>
+
+        <!-- Usage Guide Section -->
+        <section id="usage" class="pt-20 pb-20">
+            <h2 class="text-3xl font-bold text-slate-800 text-center mb-4">Usage Guide</h2>
+            <p class="text-lg text-slate-600 text-center max-w-3xl mx-auto mb-12">
+                Interact with the system through its three primary interfaces. Use the tabs below to explore code examples for the API, CLI, and Web UI.
+            </p>
+            <div class="bg-white rounded-xl shadow-lg p-2">
+                <!-- Tabs -->
+                <div class="border-b border-slate-200">
+                    <nav id="usage-tabs" class="-mb-px flex space-x-6 px-4" aria-label="Tabs">
+                        <button class="tab-btn active" data-target="api-content">API</button>
+                        <button class="tab-btn" data-target="cli-content">CLI</button>
+                        <button class="tab-btn" data-target="ui-content">Web UI</button>
+                    </nav>
+                </div>
+                <!-- Tab Content -->
+                <div id="tab-content-container" class="p-6">
+                    <!-- API Content -->
+                    <div id="api-content" class="tab-content">
+                        <p class="mb-4 text-slate-600">Use `curl` or any API client to interact with the backend. The server must be running.</p>
+                        <div class="code-block" data-code='curl -X POST http://localhost:8000/instruct -H "Content-Type: application/json" -d "{\\"input\\": {\\"code\\": \\"def h():...\\", \\"language\\": \\"Python\\"}}"'></div>
+                        <div class="code-block" data-code='curl -X POST http://localhost:8000/agent/workflow_agent -H "Content-Type: application/json" --data @test_workflow.json'></div>
+                    </div>
+                    <!-- CLI Content -->
+                    <div id="cli-content" class="tab-content hidden">
+                        <p class="mb-4 text-slate-600">Use the powerful CLI for rapid testing and scripting. Run these commands from your project's root directory.</p>
+                        <div class="code-block" data-code="python cli.py chat"></div>
+                        <div class="code-block" data-code='python cli.py agent sql_generator_agent "instruction=Get users from India" "table_schema=CREATE TABLE..."'></div>
+                        <div class="code-block" data-code='python cli.py workflow test_workflow.json "resume=Arshad Jamal..."'></div>
+                    </div>
+                    <!-- UI Content -->
+                    <div id="ui-content" class="tab-content hidden">
+                        <p class="mb-4 text-slate-600">The Streamlit Web UI is the most intuitive way to use the system. Ensure the API server is running, then start the UI.</p>
+                        <div class="code-block" data-code="streamlit run ui.py"></div>
+                         <p class="mt-4 text-slate-600">The UI provides an interactive playground to build agent chains, edit prompts on-the-fly, and view chat history.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Roadmap Section -->
+        <section id="roadmap" class="pt-20 pb-20">
+            <h2 class="text-3xl font-bold text-slate-800 text-center mb-12">Future Roadmap</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-sky-500">
+                    <h3 class="font-semibold text-slate-900 mb-2">Enhanced Logging & Trace Viewer</h3>
+                    <p class="text-slate-600">Implement a robust logging system and a UI to visualize the step-by-step execution of agent workflows.</p>
+                </div>
+                 <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-sky-500">
+                    <h3 class="font-semibold text-slate-900 mb-2">Deployment Packaging</h3>
+                    <p class="text-slate-600">Create Dockerfiles and deployment scripts for easy hosting on platforms like Hugging Face Spaces or cloud services.</p>
+                </div>
+                 <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-sky-500">
+                    <h3 class="font-semibold text-slate-900 mb-2">Vector-Based Memory</h3>
+                    <p class="text-slate-600">Upgrade the memory system to use a vector database for long-term, semantic memory retrieval.</p>
+                </div>
+                 <div class="bg-white p-6 rounded-xl shadow-sm border-l-4 border-sky-500">
+                    <h3 class="font-semibold text-slate-900 mb-2">Add More Agents</h3>
+                    <p class="text-slate-600">Continuously expand the system's capabilities by adding new specialist agents for different domains.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+    
+    <footer class="bg-white border-t border-slate-200">
+        <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 text-center text-slate-500">
+            <p>&copy; 2025 GenAI Multi-Agent Framework. Contributions are welcome!</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- Agent Data ---
+            const agents = [
+                { name: 'code_explainer_agent', description: 'Explains code snippets in detail.', inputs: ['code', 'language', 'depth'] },
+                { name: 'doc_qa_agent', description: 'Answers questions from a provided PDF document.', inputs: ['pdf_path', 'question'] },
+                { name: 'email_generator_agent', description: 'Generates professional email drafts.', inputs: ['purpose', 'content', 'tone'] },
+                { name: 'resume_analyzer_agent', description: 'Analyzes a resume against a job description.', inputs: ['resume_text', 'job_description'] },
+                { name: 'slide_generator_agent', description: 'Creates presentation outlines.', inputs: ['topic', 'bullets'] },
+                { name: 'sql_generator_agent', description: 'Generates SQL queries from natural language.', inputs: ['instruction', 'table_schema', 'sql_dialect'] },
+                { name: 'workflow_agent', description: 'Meta-Agent: Executes a chain of other agents.', inputs: ['steps (list)', 'initial context'] }
+            ];
+
+            const agentGrid = document.getElementById('agent-grid');
+            const agentDetailView = document.getElementById('agent-detail-view');
+            const detailName = document.getElementById('detail-name');
+            const detailDesc = document.getElementById('detail-desc');
+            const detailInputs = document.getElementById('detail-inputs');
+            const closeDetailViewBtn = document.getElementById('close-detail-view');
+            const agentSearch = document.getElementById('agent-search');
+
+            // --- Agent Explorer Logic ---
+            function renderAgents(filter = '') {
+                agentGrid.innerHTML = '';
+                const filteredAgents = agents.filter(agent => agent.name.toLowerCase().includes(filter.toLowerCase()));
+                
+                filteredAgents.forEach(agent => {
+                    const card = document.createElement('div');
+                    card.className = 'bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 cursor-pointer';
+                    card.innerHTML = `<h3 class="text-lg font-semibold text-slate-900 truncate">${agent.name}</h3><p class="text-slate-500 truncate">${agent.description}</p>`;
+                    card.addEventListener('click', () => showAgentDetails(agent));
+                    agentGrid.appendChild(card);
+                });
+            }
+
+            function showAgentDetails(agent) {
+                detailName.textContent = agent.name;
+                detailDesc.textContent = agent.description;
+                detailInputs.innerHTML = agent.inputs.map(input => `<span class="bg-sky-100 text-sky-800 text-sm font-medium px-2.5 py-0.5 rounded-full">${input}</span>`).join('');
+                agentDetailView.classList.remove('hidden');
+            }
+
+            closeDetailViewBtn.addEventListener('click', () => agentDetailView.classList.add('hidden'));
+            agentSearch.addEventListener('input', (e) => renderAgents(e.target.value));
+
+            // --- Usage Guide Tabs Logic ---
+            const tabs = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    tabContents.forEach(content => content.classList.add('hidden'));
+                    document.getElementById(tab.dataset.target).classList.remove('hidden');
+                });
+            });
+            
+            // --- Code Block with Copy Button Logic ---
+            document.querySelectorAll('.code-block').forEach(block => {
+                const code = block.dataset.code;
+                block.className = 'relative bg-slate-800 text-white rounded-lg p-4 font-mono text-sm my-4';
+                
+                const pre = document.createElement('pre');
+                pre.textContent = code;
+                
+                const button = document.createElement('button');
+                button.textContent = 'Copy';
+                button.className = 'absolute top-2 right-2 bg-slate-600 hover:bg-sky-600 text-white text-xs font-semibold py-1 px-2 rounded';
+                
+                button.addEventListener('click', () => {
+                    const textarea = document.createElement('textarea');
+                    textarea.value = code;
+                    document.body.appendChild(textarea);
+                    textarea.select();
+                    try {
+                        document.execCommand('copy');
+                        button.textContent = 'Copied!';
+                    } catch (err) {
+                        button.textContent = 'Failed!';
+                    }
+                    document.body.removeChild(textarea);
+                    setTimeout(() => { button.textContent = 'Copy'; }, 2000);
+                });
+                
+                block.appendChild(pre);
+                block.appendChild(button);
+            });
+            
+            // --- Architecture Diagram Tooltips ---
+            document.querySelectorAll('.arch-node, .arch-node-large').forEach(node => {
+                const tooltipText = node.dataset.tooltip;
+                if(tooltipText) {
+                    const tooltip = document.createElement('div');
+                    tooltip.className = 'tooltip absolute bottom-full mb-2 w-48 bg-slate-800 text-white text-xs rounded py-1 px-2 text-center z-10';
+                    tooltip.textContent = tooltipText;
+                    node.appendChild(tooltip);
+                    node.classList.add('relative', 'flex', 'justify-center');
+                }
+            });
+            
+            // Initial render
+            renderAgents();
+            
+            // Custom styles for dynamic elements
+            const style = document.createElement('style');
+            style.innerHTML = `
+                .tab-btn {
+                    @apply text-slate-500 hover:text-slate-700 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm border-transparent;
+                }
+                .tab-btn.active {
+                    @apply border-sky-500 text-sky-600;
+                }
+                .arch-node {
+                    @apply bg-slate-100 border border-slate-200 rounded-lg px-4 py-2 text-sm font-medium text-slate-700 cursor-pointer hover:bg-sky-100 hover:border-sky-300 transition-colors;
+                }
+                .arch-node-large {
+                     @apply bg-sky-100 border border-sky-300 rounded-lg px-8 py-4 text-base font-semibold text-sky-800 cursor-pointer hover:bg-sky-200 transition-colors;
+                }
+            `;
+            document.head.appendChild(style);
+        });
+    </script>
+</body>
+</html>

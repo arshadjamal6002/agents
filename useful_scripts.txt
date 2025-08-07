@@ -1,0 +1,29 @@
+python -m scripts.test_orchestrator
+
+python -m scripts.test_code_explainer
+
+uvicorn api_server:app --reload
+
+
+curl -X POST http://localhost:8000/instruct -H "Content-Type: application/json" -d "{\"input\": {\"code\": \"def hello_world():\\n  print(\\\"Hello, World!\\\")\", \"language\": \"Python\", \"depth\": \"beginner\"}}"
+
+
+python -m evaluations.eval_runner
+
+
+curl -X POST http://localhost:8000/agent/workflow_agent -H "Content-Type: application/json" --data @test_workflow.json
+
+
+
+
+python cli.py chat
+
+python cli.py workflow test_workflow.json "resume=Arshad Jamal, a skilled Cloud Engineer with 5 years experience in AWS and Terraform." "job_description=We are hiring a DevOps professional with strong AWS and Infrastructure-as-Code skills."
+
+python cli.py agent sql_generator_agent "instruction=Get all users from India" "table_schema=CREATE TABLE users (id INT, name TEXT, country TEXT);" "sql_dialect=Standard SQL"
+
+
+
+python cli.py mem
+
+
