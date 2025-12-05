@@ -1,6 +1,7 @@
 # utils/vector_store.py
 
-from langchain.text_splitter import RecursiveCharacterTextSplitter
+# Updated import for modern LangChain
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import FAISS
 from langchain_openai import OpenAIEmbeddings
 from typing import Tuple
