@@ -1,9 +1,8 @@
-# ui.py
-
 import streamlit as st
 import requests
 import os
 import json
+import re
 
 # --- Page Configuration ---
 st.set_page_config(
@@ -15,187 +14,267 @@ st.set_page_config(
 
 # --- App Title ---
 st.title("🧠 Multi-Agent AI Playground")
+st.caption("A web interface to interact with a powerful, multi-agent backend.")
 
-# --- API and Agent Configuration ---
+# --- API Configuration ---
 API_URL = os.getenv("API_URL", "http://localhost:8000")
 
-@st.cache_data(ttl=3600)
+# --- Helper Functions ---
 def get_agents():
-    """Fetches the list of available agents from the API."""
+    """Fetches agent details from the API."""
     try:
         response = requests.get(f"{API_URL}/agents")
         response.raise_for_status()
-        # Fetch the full agent objects
-        agents = response.json() 
-        # Create a dictionary for easy lookup
-        agent_map = {agent['name']: agent for agent in agents}
-        # Add the orchestrator as a special case
-        agent_map["Auto (Orchestrator)"] = {"name": "Auto (Orchestrator)", "required_inputs": ["A natural language prompt."]}
+        agents_list = response.json()
+        agent_map = {agent['name']: agent for agent in agents_list}
+        agent_map["Auto (Orchestrator)"] = {
+            "name": "Auto (Orchestrator)",
+            "description": "Let the orchestrator choose the best agent.",
+            "required_inputs": [] # Empty list = single text input
+        }
         return agent_map
     except requests.exceptions.RequestException as e:
-        st.sidebar.error(f"API Error: {e}")
-        return ["Auto (Orchestrator)"]
+        st.error(f"⚠️ API Error: {e}")
+        return {}
 
+def format_recursively(data, context):
+    """Recursively formats strings in a nested data structure."""
+    if isinstance(data, dict):
+        return {k: format_recursively(v, context) for k, v in data.items()}
+    elif isinstance(data, list):
+        return [format_recursively(item, context) for item in data]
+    elif isinstance(data, str):
+        placeholders = re.findall(r"\{\{(.*?)\}\}", data)
+        for placeholder in placeholders:
+            if placeholder in context:
+                data = data.replace(f"{{{{{placeholder}}}}}", str(context.get(placeholder, '')))
+        return data
+    else:
+        return data
+
+# Load Agents (No cache to ensure updates are seen)
 AVAILABLE_AGENTS = get_agents()
 
 # --- Initialize Session State ---
-# This is where we store data that persists across user interactions.
-# Enhancement 1: Chat History
 if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
-
-# Enhancement 2: Custom Prompts
 if "custom_prompts" not in st.session_state:
     st.session_state.custom_prompts = {}
+if 'chain' not in st.session_state:
+    st.session_state.chain = []
 
-# --- Sidebar for Configuration ---
+# --- Sidebar ---
 with st.sidebar:
     st.header("⚙️ Configuration")
-
-    # --- Enhancement 3: Agent Chaining Toggle ---
-    st.markdown("---")
     chaining_mode = st.checkbox("🔗 Enable Agent Chaining", value=False)
     st.markdown("---")
+    
+    # SINGLE AGENT SELECTOR
+    st.header("Mode Selection")
+    agent_names = list(AVAILABLE_AGENTS.keys())
+    # Default to Orchestrator if available, else first agent
+    default_index = agent_names.index("Auto (Orchestrator)") if "Auto (Orchestrator)" in agent_names else 0
+    agent_choice = st.selectbox("Choose an agent:", agent_names, index=default_index, disabled=chaining_mode)
+    
+    # Show info box
+    if agent_choice and agent_choice in AVAILABLE_AGENTS:
+        info = AVAILABLE_AGENTS[agent_choice]
+        reqs = info.get("required_inputs", [])
+        if reqs:
+            st.info(f"**Inputs:** `{', '.join(reqs)}`")
 
-    # Original agent selection (moved to sidebar)
-    # ui.py sidebar section
-    st.header("Agent Selection")
-
-    # The keys of the map are the names for the dropdown
-    agent_choice = st.selectbox(
-        "Choose an agent to interact with:",
-        list(AVAILABLE_AGENTS.keys()),
-        disabled=chaining_mode
-    )
-
-    # Display the required inputs for the selected agent
-    if agent_choice:
-        selected_agent_info = AVAILABLE_AGENTS[agent_choice]
-        inputs = selected_agent_info.get("required_inputs", [])
-        if inputs:
-            st.info(f"**Required Inputs:** `{', '.join(inputs)}`")
-
-    # --- Enhancement 2: Prompt Editor ---
-    st.title("🛠️ Prompt Editor")
-    st.caption("Fine-tune agent behavior for this session.")
-
-    # Exclude "Auto" and "workflow_agent" from being editable
-    editable_agents = [agent for agent in AVAILABLE_AGENTS if agent not in ["Auto (Orchestrator)", "workflow_agent"]]
+    st.markdown("---")
+    
+    # Prompt Editor
+    st.header("🛠️ Prompt Editor")
+    editable_agents = [name for name in agent_names if name != "Auto (Orchestrator)"]
     selected_for_edit = st.selectbox("Edit prompt for agent:", editable_agents)
-
-    # Define some reasonable default prompts
-    default_prompts = {
-        "resume_analyzer_agent": "Analyze this resume against the job description, providing a match score and suggestions.",
-        "email_generator_agent": "You are a professional email writing assistant. Write an email based on the provided context.",
-        # Add other default prompts as needed
-    }
-
-    # Load existing prompt from session state or default
-    existing_prompt = st.session_state.custom_prompts.get(selected_for_edit, default_prompts.get(selected_for_edit, "No default prompt set for this agent."))
-    edited_prompt = st.text_area("Custom Prompt:", value=existing_prompt, height=200)
+    
+    existing_prompt = st.session_state.custom_prompts.get(selected_for_edit, "")
+    edited_prompt = st.text_area("Custom Prompt:", value=existing_prompt, height=150, key=f"editor_{selected_for_edit}")
 
     if st.button("💾 Save Prompt"):
         st.session_state.custom_prompts[selected_for_edit] = edited_prompt
-        st.success(f"Custom prompt for {selected_for_edit} saved for this session.")
+        st.success(f"Saved!")
 
-# --- Main Page Layout ---
+# --- Main Content Area ---
 st.header("Your Request")
 
-# --- Enhancement 3: UI for Agent Chaining ---
+# We will collect inputs in this dictionary
+execution_inputs = {}
+file_content = None
+
+# ==========================================
+# UI LOGIC: CHAINING MODE
+# ==========================================
 if chaining_mode:
-    st.info("🔗 Chaining Mode Enabled: The output of each agent will be the input for the next.")
-    selected_chain = st.multiselect(
-        "Select agents to chain (in order of execution):",
-        [agent for agent in AVAILABLE_AGENTS if agent != "Auto (Orchestrator)"]
-    )
+    st.info("🔗 **Chaining Mode Active**")
+    
+    col1, col2 = st.columns([3, 1])
+    with col1:
+        chain_options = [n for n in agent_names if n != "Auto (Orchestrator)"]
+        agent_to_add = st.selectbox("Select agent to add:", chain_options, key="chain_add_select")
+    with col2:
+        if st.button("➕ Add Step", use_container_width=True):
+            st.session_state.chain.append({"agent_name": agent_to_add, "inputs": {}})
+            st.rerun()
 
-# Main input area
-user_input = st.text_area("Enter your prompt or data:", height=150)
-file_upload = st.file_uploader("Or upload a file (optional):", type=["txt", "md", "py", "json"])
+    if st.session_state.chain:
+        st.markdown("---")
+        for i, step in enumerate(st.session_state.chain):
+            agent_name = step['agent_name']
+            with st.container(border=True):
+                st.subheader(f"Step {i+1}: {agent_name}")
+                
+                agent_config = AVAILABLE_AGENTS.get(agent_name, {})
+                required_inputs = agent_config.get('required_inputs', [])
+                
+                # Dynamic inputs for Chain Steps
+                if required_inputs:
+                    for req_input in required_inputs:
+                        key = f"chain_input_{i}_{req_input}"
+                        val = st.text_area(f"Input for `{req_input}`:", key=key, height=100)
+                        step['inputs'][req_input] = val
+                else:
+                    key = f"chain_input_{i}_raw"
+                    val = st.text_area(f"Input for `{agent_name}`:", key=key, height=100)
+                    step['inputs']['input'] = val
 
-if st.button("🚀 Run"):
-    content = user_input
-    if file_upload:
-        content = file_upload.read().decode("utf-8")
-
-    if not content:
-        st.warning("Please provide an input.")
-    else:
-        # --- Main Execution Logic ---
-        with st.spinner("The agents are collaborating..."):
-            final_output = None
+        if st.button("🗑️ Clear Chain"):
+            st.session_state.chain = []
+            st.rerun()
             
-            # --- Enhancement 3: Chaining Logic ---
-            if chaining_mode and selected_chain:
-                try:
-                    chain_input = json.loads(content)
-                except json.JSONDecodeError:
-                    chain_input = content
-                # --- END: THE FIX ---
+    # Initial input for the start of the chain
+    st.markdown("### Initial Data")
+    execution_inputs["initial_input"] = st.text_area("Enter initial prompt / data:", height=100, key="chain_initial_input")
 
-                for agent_name in selected_chain:
-                    with st.expander(f"Step {selected_chain.index(agent_name) + 1}: Running `{agent_name}`", expanded=True):
-            # ... loop continues
-                        st.markdown(f"**Input:**\n```\n{str(chain_input)[:1000]}...\n```")
-                        
-                        payload = {"input": chain_input}
+# ==========================================
+# UI LOGIC: SINGLE AGENT MODE
+# ==========================================
+else:
+    current_agent_config = AVAILABLE_AGENTS.get(agent_choice, {})
+    required_inputs = current_agent_config.get("required_inputs", [])
+
+    # CASE A: Agent has specific required inputs (e.g. resume_analyzer, sql_generator)
+    if required_inputs and len(required_inputs) > 0:
+        st.subheader(f"Inputs for `{agent_choice}`")
+        for req_input in required_inputs:
+            # Create a separate text box for each requirement
+            execution_inputs[req_input] = st.text_area(f"Enter `{req_input}`:", height=150)
+            
+    # CASE B: Agent takes a single generic input (Orchestrator)
+    else:
+        execution_inputs["input"] = st.text_area("Enter your prompt:", height=150)
+
+# Global File Uploader (Available in all modes)
+file_upload = st.file_uploader("Or upload a file (content will be added to inputs):", type=["txt", "md", "py", "json", "pdf"])
+
+
+# ==========================================
+# EXECUTION LOGIC
+# ==========================================
+if st.button("🚀 Run", type="primary"):
+    
+    # Handle File Upload
+    if file_upload:
+        try:
+            file_content = file_upload.read().decode("utf-8")
+            # If we are in single input mode, append file content
+            if "input" in execution_inputs:
+                execution_inputs["input"] += f"\n\n[File Content]:\n{file_content}"
+            # If we are in structured mode, user can decide where to put it, 
+            # OR we can just add it to a generic 'file_content' key if needed.
+            # For now, let's auto-fill 'pdf_path' or similar if it matches.
+        except Exception:
+            st.error("Could not read file. Ensure it is text-based.")
+
+    with st.spinner("Processing..."):
+        
+        # --- PATH A: CHAIN EXECUTION ---
+        if chaining_mode and st.session_state.chain:
+            context = {"initial_input": execution_inputs.get("initial_input", "")}
+            if file_content: context["file_content"] = file_content
+            
+            final_output = None
+            chain_failed = False
+            
+            for i, step in enumerate(st.session_state.chain):
+                agent_name = step['agent_name']
+                
+                # Format inputs
+                raw_inputs = step.get('inputs', {})
+                formatted_inputs = format_recursively(raw_inputs, context)
+                
+                with st.status(f"Running Step {i+1}: {agent_name}...", expanded=True) as status:
+                    st.write("**Inputs:**", formatted_inputs)
+                    
+                    try:
+                        payload = {"input": formatted_inputs}
                         if agent_name in st.session_state.custom_prompts:
                             payload["prompt_override"] = st.session_state.custom_prompts[agent_name]
 
-                        endpoint = f"{API_URL}/agent/{agent_name}"
-                        res = requests.post(endpoint, json=payload)
-
+                        res = requests.post(f"{API_URL}/agent/{agent_name}", json=payload)
+                        
                         if res.status_code == 200:
-                            output = res.json().get("output", res.text)
-                            st.markdown("**Output:**")
-                            st.json(output) if isinstance(output, (dict, list)) else st.markdown(output)
-                            chain_input = output # Pass output to the next agent
+                            result = res.json().get("output", res.text)
+                            st.write("**Output:**", result)
+                            status.update(label=f"✅ Step {i+1} Complete", state="complete", expanded=False)
+                            context[f"step_{i+1}_output"] = result
+                            final_output = result
                         else:
-                            st.error(f"Agent `{agent_name}` failed: {res.text}")
-                            chain_input = None
+                            status.update(label="❌ Failed", state="error")
+                            st.error(res.text)
+                            chain_failed = True
                             break
-                final_output = chain_input
+                    except Exception as e:
+                        st.error(f"Connection Error: {e}")
+                        chain_failed = True
+                        break
             
-            # --- Original Single-Agent/Orchestrator Logic ---
+            if not chain_failed and final_output:
+                st.success("Chain Complete!")
+                st.session_state.chat_history.append({"agent": "Agent Chain", "input": "Chain Execution", "output": final_output})
+
+        # --- PATH B: SINGLE AGENT EXECUTION ---
+        else:
+            selected_agent = agent_choice if agent_choice != "Auto (Orchestrator)" else None
+            endpoint = f"{API_URL}/agent/{selected_agent}" if selected_agent else f"{API_URL}/instruct"
+            
+            # Prepare Payload
+            # If we collected multiple inputs (structured), send them as a dictionary
+            if len(execution_inputs) > 1 or (len(execution_inputs) == 1 and "input" not in execution_inputs):
+                payload = {"input": execution_inputs}
             else:
-                selected_agent = agent_choice if agent_choice != "Auto (Orchestrator)" else None
-                endpoint = f"{API_URL}/agent/{selected_agent}" if selected_agent else f"{API_URL}/instruct"
-                
-                payload = {"input": content}
-                if selected_agent and selected_agent in st.session_state.custom_prompts:
-                    payload["prompt_override"] = st.session_state.custom_prompts[selected_agent]
-                
+                # Simple single string input
+                payload = {"input": execution_inputs.get("input", "")}
+
+            # Prompt Override
+            if selected_agent and selected_agent in st.session_state.custom_prompts:
+                payload["prompt_override"] = st.session_state.custom_prompts[selected_agent]
+
+            try:
                 res = requests.post(endpoint, json=payload)
-
                 if res.status_code == 200:
-                    result_data = res.json()
-                    final_output = result_data.get("output", result_data)
-                    st.success("✅ Done!")
-                    st.subheader("🧠 Response")
-                    st.json(final_output) if isinstance(final_output, (dict, list)) else st.markdown(final_output)
+                    result = res.json().get("output", res.text)
+                    st.success("Done!")
+                    st.subheader("Result:")
+                    
+                    if isinstance(result, (dict, list)):
+                        st.json(result)
+                    else:
+                        st.markdown(result)
+                    
+                    st.session_state.chat_history.append({"agent": agent_choice, "input": payload["input"], "output": result})
                 else:
-                    st.error(f"❌ Error: {res.text}")
+                    st.error(f"Error: {res.text}")
+            except Exception as e:
+                st.error(f"Connection Failed: {e}")
 
-            # --- Enhancement 1: Append to Chat History ---
-            if final_output:
-                st.session_state.chat_history.append({
-                    "agent": "Agent Chain" if chaining_mode and selected_chain else agent_choice,
-                    "input": content,
-                    "output": final_output
-                })
-
-# --- Enhancement 1: Display Chat History ---
+# --- Chat History ---
 st.divider()
-st.header("📜 Chat History")
-
-if not st.session_state.chat_history:
-    st.info("Your previous results will appear here.")
-
-for i, msg in enumerate(reversed(st.session_state.chat_history)):
-    agent_name = msg.get('agent', 'Unknown')
-    with st.expander(f"**{agent_name}** (Run #{len(st.session_state.chat_history) - i})"):
-        st.caption("Input:")
-        st.code(msg["input"], language="text")
-        st.caption("Output:")
-        output = msg["output"]
-        st.json(output) if isinstance(output, (dict, list)) else st.markdown(output)
+if st.session_state.chat_history:
+    st.header("📜 History")
+    for item in reversed(st.session_state.chat_history):
+        with st.expander(f"{item['agent']}"):
+            st.write("**Input:**", item['input'])
+            st.write("**Output:**", item['output'])
