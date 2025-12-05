@@ -6,8 +6,19 @@ from orchestrator_agent import handle_user_input, AGENTS, AGENT_CONFIGS
 import uvicorn
 import os
 import json
+from fastapi.middleware.cors import CORSMiddleware  # <-- ADD THIS
 
 app = FastAPI(title="Multi-Agent GenAI API")
+
+# --- ADD THIS BLOCK IMMEDIATELY AFTER app = FastAPI(...) ---
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allows all origins (simplest for dev/demos)
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows all methods
+    allow_headers=["*"],  # Allows all headers
+)
+# -----------------------------------------------------------
 
 class InstructRequest(BaseModel):
     input: str | dict
