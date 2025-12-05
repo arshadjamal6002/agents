@@ -379,3 +379,4 @@ requests
 typer
 rich
 pydantic
+streamlit
