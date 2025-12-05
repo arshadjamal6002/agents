@@ -365,7 +365,7 @@
 # zc.lockfile==3.0.post1
 # zipp==3.21.0
 # zstandard==0.25.0
-
+# reqs
 fastapi
 uvicorn
 python-dotenv
